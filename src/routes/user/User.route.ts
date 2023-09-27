@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { IController } from "../../controllers/Interfaces/IController";
+import { IController } from "~/controllers/Interfaces/IController";
 
 class UserRouter {
   constructor(private router: Router, private createUser: IController) {

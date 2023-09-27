@@ -1,4 +1,4 @@
-import { CreateUserController } from "./CreateUserController"
+import { CreateUserController } from "~/controllers/user/CreateUserController"
 
 const createUserController = new CreateUserController()
 

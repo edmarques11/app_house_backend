@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { prismaClient as prisma } from "../../database/prismaClient";
-import { IController } from "../Interfaces/IController";
+import { prismaClient as prisma } from "~/database/prismaClient";
+import { IController } from "~/controllers/Interfaces/IController";
 
 export class CreateUserController extends IController {
   async handler(request: Request, response: Response): Promise<Response> {
