@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { router as userRouter } from "./user.route";
+import { UserRouter } from "./user/User.route";
+import { userControllers } from "../controllers";
 
-const router = Router();
-router.use(userRouter);
+const router: Router = Router();
+
+new UserRouter(router, userControllers.createUserController);
 
 export { router };

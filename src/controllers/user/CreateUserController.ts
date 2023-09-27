@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
-import { prismaClient as prisma } from "../database/prismaClient";
+import { prismaClient as prisma } from "../../database/prismaClient";
+import { IController } from "../Interfaces/IController";
 
-export class CreateUserController {
-  async handle(request: Request, response: Response) {
+export class CreateUserController extends IController {
+  async handler(request: Request, response: Response): Promise<Response> {
     const { name, email, password, rule_id } = request.body;
 
     const user = await prisma.user.create({
