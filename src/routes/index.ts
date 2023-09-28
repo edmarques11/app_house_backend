@@ -4,6 +4,6 @@ import { userControllers } from "~/controllers";
 
 const router: Router = Router();
 
-new UserRouter(router, userControllers.createUserController);
+new UserRouter(router, userControllers);
 
 export { router };
