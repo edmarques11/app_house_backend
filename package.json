@@ -1,9 +1,9 @@
 {
   "name": "my-house-backend",
-  "module": "src/server.ts",
   "type": "module",
   "scripts": {
-    "start": "bun src/server.ts"
+    "start": "bun src/external/server.ts",
+    "dev": "bun run --watch src/external/server.ts"
   },
   "devDependencies": {
     "bun-types": "latest",
