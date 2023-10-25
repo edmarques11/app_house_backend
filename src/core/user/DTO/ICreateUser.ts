@@ -1,4 +1,4 @@
-export default interface CreateUser {
+export default interface ICreateUser {
   name: string;
   email: string;
   password: string;

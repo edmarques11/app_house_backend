@@ -14,21 +14,34 @@ model Rule {
   id         String   @id @default(uuid())
   name       String   @db.VarChar(25)
   created_at DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  updated_at DateTime @updatedAt
   tb_user    User[]
 
   @@map("tb_rule")
 }
 
-model User {
+model AuthToken {
   id         String   @id @default(uuid())
-  name       String   @db.VarChar(255)
-  email      String   @unique @db.VarChar(255)
-  password   String   @db.VarChar(255)
+  token      String   @db.VarChar(255)
+  time_valid String   @db.VarChar(20)
   created_at DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  rule       Rule     @relation(fields: [rule_id], references: [id])
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+
+  @@map("auth_token")
+}
+
+model User {
+  id         String      @id @default(uuid())
+  name       String      @db.VarChar(255)
+  email      String      @unique @db.VarChar(255)
+  password   String      @db.VarChar(255)
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  rule       Rule        @relation(fields: [rule_id], references: [id])
   rule_id    String
+  AuthToken  AuthToken[]
 
   @@map("tb_user")
 }

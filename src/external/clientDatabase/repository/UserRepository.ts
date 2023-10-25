@@ -8,4 +8,8 @@ export default class UserRepository implements IUserRepository {
   async create(user: IUser): Promise<IUser> {
     return this.prisma.user.create({ data: user });
   }
+
+  async findByEmail(email: string): Promise<IUser | null> {
+    return this.prisma.user.findFirst({ where: { email } });
+  }
 }

@@ -4,6 +4,6 @@ export default interface IUser {
   email: string;
   password: string;
   created_at: Date;
-  updatedAt: Date;
+  updated_at: Date;
   rule_id: string;
 }

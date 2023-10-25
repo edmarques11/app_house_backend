@@ -22,7 +22,9 @@ export default class CreateUserController
       });
     } catch (err) {
       console.error(err)
-      return response.status(400).json({ message: err });
+      return response
+        .status(400)
+        .json({ code: response.statusCode, message: 'Lascou o Zé da Joana' });
     }
   }
 }
