@@ -1,17 +1,23 @@
-import { PrismaClient } from "@prisma/client";
 import IAuthTokenRepository from "~/core/auth/Repository/IAuthTokenRepository";
-import IAuthToken from "~/core/auth/model/IAuthToken";
+import jwt from "jsonwebtoken";
 
 export default class AuthTokenRepository implements IAuthTokenRepository {
-  constructor(private readonly prisma: PrismaClient) {}
+  constructor(private readonly privateKey: string) {}
 
-  async saveToken(data: IAuthToken): Promise<IAuthToken> {
-    return this.prisma.authToken.create({
-      data: {
-        user_id: data.user_id,
-        time_valid: data.time_valid,
-        token: data.token,
-      },
+  createToken(): string {
+    const token = jwt.sign({}, this.privateKey, {
+      algorithm: "RS256",
+      expiresIn: "1h",
     });
+    return token;
+  }
+
+  verifyValidToken(token: string): string {
+    try {
+      const decoded = jwt.verify(token, this.privateKey);
+      return `${decoded}`;
+    } catch {
+      throw new Error("Token inválido");
+    }
   }
 }
