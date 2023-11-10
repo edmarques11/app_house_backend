@@ -1,5 +1,4 @@
 import IAuthTokenRepository from "~/core/auth/Repository/IAuthTokenRepository";
-import IAuthToken from "~/core/auth/model/IAuthToken";
 import ILogin from "~/core/auth/DTO/ILogin";
 import IUserRepository from "~/core/user/repository/IUserRepository";
 import SecurityPassword from "~/external/encrypt/SecurityPassword";
@@ -22,12 +21,10 @@ export default class LoginService {
       throw new Error(errorMessage);
 
     const dataSaveToken = {
-      user_id: user.id,
-      token: user.password,
-      time_valid: '1h'
-    } as IAuthToken
+      user_id: user.id
+    }
 
-    const { token } = await this.authTokenRepository.saveToken(dataSaveToken);
+    const token  = await this.authTokenRepository.createToken(dataSaveToken);
 
     return token;
   }

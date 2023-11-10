@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "start": "bun src/external/server.ts",
-    "dev": "bun run --watch src/external/server.ts"
+    "dev": "bun run --watch src/external/server.ts",
+    "dev:debugger": "bun run --inspect src/external/server.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.1",

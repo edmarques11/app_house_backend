@@ -1,4 +1,4 @@
 export default interface IAuthTokenRepository {
-  createToken(): string
-  verifyValidToken(token: string): string
+  createToken(obj: object): string
+  verifyValidToken(token: string): any
 }
