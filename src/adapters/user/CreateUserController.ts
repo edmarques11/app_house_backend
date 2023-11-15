@@ -1,6 +1,7 @@
-import CreateUserService from "~/core/user/service/CreateUserService";
-import IUseCase from "../shared/IUseCase";
-import { Request, Response } from "express";
+import type CreateUserService from "~/core/user/service/CreateUserService";
+import type IUseCase from "~/adapters/shared/IUseCase";
+import type { Request, Response } from "express";
+import FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 
 export default class CreateUserController
   implements IUseCase<Request, Response>
@@ -20,11 +21,9 @@ export default class CreateUserController
         message: "Aí preá",
         data: userCreated,
       });
-    } catch (err) {
-      console.error(err)
-      return response
-        .status(400)
-        .json({ code: response.statusCode, message: 'Lascou o Zé da Joana' });
+    } catch (err: any) {
+      console.error(err);
+      return FactoryJsonResponse.create(response, 400, err.message, {});
     }
   }
 }

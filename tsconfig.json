@@ -26,5 +26,9 @@
       "~/*": ["./src/*"]
     }
   },
-  "exclude": ["prisma/seeds/**.*"]
+  "exclude": ["prisma/seeds/**.*"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json",
+  ],
 }
