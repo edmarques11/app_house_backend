@@ -1,9 +1,15 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import yup from "yup";
-import FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
+import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 
 export default class CreateUserValidation {
-  async execute(req: Request, res: Response, next: NextFunction) {
+  constructor(private readonly factoryResponse: FactoryJsonResponse) {}
+
+  async execute(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
       const schema = yup.object({
         name: yup
@@ -34,12 +40,7 @@ export default class CreateUserValidation {
 
       next();
     } catch (err: any) {
-      return FactoryJsonResponse.create(
-        res,
-        422,
-        "Campos inválidos",
-        err.errors
-      );
+      this.factoryResponse.send(res, 422, "Campos inválidos", err.errors);
     }
   }
 }

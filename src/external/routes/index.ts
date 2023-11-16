@@ -1,4 +1,6 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Router } from "express";
+import type { NextFunction, Request, Response } from "express";
+import swaggerUi from "swagger-ui-express";
 import { prismaClient } from "~/external/clientDatabase/prisma/prismaClient";
 import CreateUserController from "~/adapters/user/CreateUserController";
 import CreateUserService from "~/core/user/service/CreateUserService";
@@ -16,16 +18,18 @@ import CreateUserValidation from "~/adapters/user/validations/CreateUserValidati
 import UserAlreadyExists from "~/core/errors/user/UserAlreadyExists";
 import RuleNotExist from "~/core/errors/rule/RuleNotExists";
 import LoginValidator from "~/adapters/auth/validations/LoginValidator";
-
-import swaggerUi from "swagger-ui-express";
 import swaggerFile from "~/external/swagger/swagger_output.json";
+import FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
+import InvalidEmailOrPassword from "~/core/errors/auth/InvalidEmailOrPassword";
 
 const router: Router = Router();
+const factoryResponse = new FactoryJsonResponse();
 
 // Errors
 const tokenNotSend = new TokenNotSend();
 const poorlyFormattedToken = new PoorlyFormattedToken();
 const unauthorizedToken = new UnauthorizedToken();
+const invalidEmailOrPassword = new InvalidEmailOrPassword();
 
 const userAlreadyExists = new UserAlreadyExists();
 const ruleNotExists = new RuleNotExist();
@@ -37,6 +41,7 @@ const authTokenRepository = new AuthTokenRepository(privateKey);
 
 const authMiddleware = new AuthMiddleware(
   authTokenRepository,
+  factoryResponse,
   poorlyFormattedToken,
   tokenNotSend,
   unauthorizedToken
@@ -44,11 +49,14 @@ const authMiddleware = new AuthMiddleware(
 
 const publicRoutes: string[] = process.env.PUBLIC_ROUTES?.split(",") ?? [];
 router.all("*", (req: Request, res: Response, next: NextFunction) => {
-  if (/^\/api-docs\/*/.test(req.path) && !process.env.production) return next();
-
-  if (publicRoutes.includes(req.path)) return next();
-
-  authMiddleware.middleware(req, res, next);
+  if (
+    (/^\/api-docs\/*/.test(req.path) && !process.env.production) ||
+    publicRoutes.includes(req.path)
+  ) {
+    next();
+  } else {
+    authMiddleware.middleware(req, res, next);
+  }
 });
 
 // External helpers
@@ -62,12 +70,11 @@ const ruleRepository = new RuleRepository(prismaClient);
 router.use(
   "/api-docs",
   swaggerUi.serve,
-  swaggerUi.serve,
   swaggerUi.setup(swaggerFile)
 );
 
 // User routes
-const createUserValidation = new CreateUserValidation();
+const createUserValidation = new CreateUserValidation(factoryResponse);
 const createUserService = new CreateUserService(
   userRepository,
   ruleRepository,
@@ -75,27 +82,37 @@ const createUserService = new CreateUserService(
   ruleNotExists,
   userAlreadyExists
 );
-const createUserController = new CreateUserController(createUserService);
+const createUserController = new CreateUserController(
+  createUserService,
+  factoryResponse
+);
 router.post(
   "/user",
-  (req: Request, res: Response, next: NextFunction) =>
-    createUserValidation.execute(req, res, next),
-  (req: Request, res: Response) => createUserController.execute(req, res)
+  async (req: Request, res: Response, next: NextFunction) => {
+    await createUserValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await createUserController.execute(req, res);
+  }
 );
 
 // Auth routes
-const loginValidation = new LoginValidator();
+const loginValidation = new LoginValidator(factoryResponse);
 const loginService = new LoginService(
   authTokenRepository,
   userRepository,
-  securityPassword
+  securityPassword,
+  invalidEmailOrPassword
 );
-const loginController = new LoginController(loginService);
+const loginController = new LoginController(loginService, factoryResponse);
 router.post(
   "/login",
-  (req: Request, res: Response, next: NextFunction) =>
-    loginValidation.execute(req, res, next),
-  (req: Request, res: Response) => loginController.execute(req, res)
+  async (req: Request, res: Response, next: NextFunction) => {
+    await loginValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await loginController.execute(req, res);
+  }
 );
 
 export { router };

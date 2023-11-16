@@ -1,4 +1,4 @@
-import IAuthTokenRepository from "~/core/auth/Repository/IAuthTokenRepository";
+import type IAuthTokenRepository from "~/core/auth/Repository/IAuthTokenRepository";
 import jwt from "jsonwebtoken";
 
 export default class AuthTokenRepository implements IAuthTokenRepository {
@@ -12,7 +12,7 @@ export default class AuthTokenRepository implements IAuthTokenRepository {
     return token;
   }
 
-  verifyValidToken(token: string): Object {
+  verifyValidToken(token: string): object {
     try {
       const decoded = jwt.verify(token, this.privateKey);
       return decoded as object;

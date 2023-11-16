@@ -1,4 +1,4 @@
-export class InvalidEmailOrPassword extends Error {
+export default class InvalidEmailOrPassword extends Error {
   constructor() {
     super("Email ou password incorretos");
     this.name = "InvalidEmailOrPassword";

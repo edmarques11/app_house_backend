@@ -9,13 +9,16 @@
   },
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "no-console": "warn",
     "@typescript-eslint/semi": "off",
     "@typescript-eslint/comma-dangle": "off",
     "@typescript-eslint/quotes": "off",
     "@typescript-eslint/space-before-function-paren": "off",
     "@typescript-eslint/indent": "off",
-    "@typescript-eslint/brace-style": "off"
-  }
+    "@typescript-eslint/brace-style": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/method-signature-style": ["error", "method"]
+  },
+  "ignorePatterns": ["prisma/seeds/*.ts"]
 }

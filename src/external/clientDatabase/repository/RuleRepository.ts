@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import IRule from "~/core/rule/model/IRule";
-import IRuleRepository from "~/core/rule/repository/IRuleRepository";
+import type { PrismaClient } from "@prisma/client";
+import type IRule from "~/core/rule/model/IRule";
+import type IRuleRepository from "~/core/rule/repository/IRuleRepository";
 
 export default class RuleRepository implements IRuleRepository {
   constructor(private readonly prisma: PrismaClient) {}

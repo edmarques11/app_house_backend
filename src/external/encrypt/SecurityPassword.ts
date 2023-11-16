@@ -3,7 +3,7 @@ export default class SecurityPassword {
     return await Bun.password.hash(password)
   }
 
-  async verifyPassword(password: string, hash: string): Promise<Boolean> {
+  async verifyPassword(password: string, hash: string): Promise<boolean> {
     return await Bun.password.verify(password, hash)
   }
 }

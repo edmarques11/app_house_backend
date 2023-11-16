@@ -1,15 +1,17 @@
-import { PrismaClient } from "@prisma/client";
-import IUser from "~/core/user/model/IUser";
-import IUserRepository from "~/core/user/repository/IUserRepository";
+import type { PrismaClient } from "@prisma/client";
+import type IUser from "~/core/user/model/IUser";
+import type IUserRepository from "~/core/user/repository/IUserRepository";
 
 export default class UserRepository implements IUserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   async create(user: IUser): Promise<IUser> {
-    return this.prisma.user.create({ data: user });
+    const userCreated = await this.prisma.user.create({ data: user });
+    return userCreated;
   }
 
   async findByEmail(email: string): Promise<IUser | null> {
-    return this.prisma.user.findFirst({ where: { email } });
+    const user = await this.prisma.user.findFirst({ where: { email } });
+    return user;
   }
 }
