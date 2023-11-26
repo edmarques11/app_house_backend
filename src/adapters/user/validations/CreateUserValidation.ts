@@ -36,7 +36,10 @@ export default class CreateUserValidation {
 
       const { name, email, password, rule } = req.body;
 
-      await schema.validate({ name, email, password, rule });
+      await schema.validate(
+        { name, email, password, rule },
+        { abortEarly: false }
+      );
 
       next();
     } catch (err: any) {

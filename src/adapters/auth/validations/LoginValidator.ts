@@ -1,4 +1,4 @@
-import type { NextFunction, Request, Response } from "express";
+import { type NextFunction, type Request, type Response } from "express";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 import yup from "yup";
 
@@ -26,7 +26,7 @@ export default class LoginValidator {
 
       const { password, username } = req.body;
 
-      await schema.validate({ password, username });
+      await schema.validate({ password, username }, { abortEarly: false });
 
       next();
     } catch (err: any) {
