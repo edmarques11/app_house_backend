@@ -4,12 +4,15 @@ import cors from "cors";
 
 const app = express();
 
-app.use(express.json());
-app.use(router);
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.ACEPTED_CORS_ORIGINS,
+    methods: process.env.ACEPTED_CORS_METHODS,
+    credentials: true,
   })
 );
+
+app.use(express.json());
+app.use(router);
 
 export { app };
