@@ -2,7 +2,7 @@ import type IAuthTokenRepository from "~/core/auth/Repository/IAuthTokenReposito
 import type ILogin from "~/core/auth/DTO/ILogin";
 import type IUserRepository from "~/core/user/repository/IUserRepository";
 import type SecurityPassword from "~/external/encrypt/SecurityPassword";
-import type { InvalidEmailOrPassword } from "~/core/errors/auth/InvalidEmailOrPassword";
+import type InvalidEmailOrPassword from "~/core/errors/auth/InvalidEmailOrPassword";
 
 export default class LoginService {
   constructor(
@@ -17,7 +17,12 @@ export default class LoginService {
 
     if (!user) throw this.invalidEmailOrPassword;
 
-    if (!this.encrypt.verifyPassword(data.password, user.password)) {
+    const isCorrectPassword = await this.encrypt.verifyPassword(
+      data.password,
+      user.password
+    );
+
+    if (!isCorrectPassword) {
       throw this.invalidEmailOrPassword;
     }
 
