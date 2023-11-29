@@ -10,25 +10,75 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Rule {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(25)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  tb_user    User[]
-
-  @@map("tb_rule")
-}
-
 model User {
-  id         String      @id @default(uuid())
-  name       String      @db.VarChar(255)
-  email      String      @unique @db.VarChar(255)
-  password   String      @db.VarChar(255)
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt
-  rule       Rule        @relation(fields: [rule_id], references: [id])
-  rule_id    String
+  id               String          @id @default(uuid())
+  name             String          @db.VarChar(255)
+  email            String          @unique @db.VarChar(255)
+  password         String          @db.VarChar(255)
+  profile_image_id String?         @unique @db.VarChar(50)
+  advertisements   Advertisement[]
+  Image            Image?          @relation(fields: [profile_image_id], references: [id])
+  created_at       DateTime        @default(now())
+  updated_at       DateTime        @updatedAt
 
   @@map("tb_user")
+}
+
+model Address {
+  id           String    @id @default(uuid())
+  zip_code     String    @db.Char(8)
+  public_place String    @db.VarChar(100)
+  complement   String?   @db.VarChar(100)
+  district     String    @db.VarChar(200)
+  state        String    @db.VarChar(50)
+  uf           String    @db.Char(2)
+  immobile     Immobile?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  @@map("tb_address")
+}
+
+model Immobile {
+  id             String          @id @default(uuid())
+  type           String          @db.VarChar(50)
+  address_id     String          @unique @db.VarChar(50)
+  advertisements Advertisement[]
+  address        Address         @relation(fields: [address_id], references: [id])
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+
+  @@map("tb_immobile")
+}
+
+model Image {
+  id             String          @id @default(uuid())
+  hash           String          @db.VarChar(255)
+  advertisements Advertisement[]
+  user           User?
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+
+  @@map("tb_image")
+}
+
+model Advertisement {
+  id            String   @id @default(uuid())
+  active        Int      @db.Int
+  title         String   @db.VarChar(100)
+  description   String   @db.VarChar(5000)
+  width         String   @db.VarChar(10)
+  length        String   @db.VarChar(10)
+  references    String   @db.VarChar(255)
+  phone_contact String   @db.VarChar(100)
+  price         Float    @db.Double
+  imobile_id    String   @db.VarChar(50)
+  owner_id      String   @db.VarChar(50)
+  images        Image[]
+  imobile       Immobile @relation(fields: [imobile_id], references: [id])
+  user          User     @relation(fields: [owner_id], references: [id])
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@map("tb_advertisement")
 }
