@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import yup from "yup";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
+import type ICreateUserDTO from "~/core/user/DTO/ICreateUserDTO";
 
 export default class CreateUserValidation {
   constructor(private readonly factoryResponse: FactoryJsonResponse) {}
@@ -27,19 +28,21 @@ export default class CreateUserValidation {
           .required("password: o campo não pode ser vazio")
           .min(6, "password: o campo deve ter no mínimo 6 caracteres")
           .max(255, "password: máximo de caracteres excedido"),
-        rule: yup
+        profile_image_id: yup
           .string()
-          .required("rule: o campo não pode ser vazio")
-          .oneOf(["locator"], "rule: valor inválido")
-          .max(25, "rule: máximo de caracteres excedido"),
+          .max(50, "rule: máximo de caracteres excedido"),
       });
 
-      const { name, email, password, rule } = req.body;
+      const { name, email, password, profile_image_id } = req.body;
+
+      const data: ICreateUserDTO = { name, email, password, profile_image_id };
 
       await schema.validate(
-        { name, email, password, rule },
+        data,
         { abortEarly: false }
       );
+
+      req.body.validatedData = data;
 
       next();
     } catch (err: any) {

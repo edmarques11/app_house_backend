@@ -1,4 +1,4 @@
-export default interface ILogin {
+export default interface ILoginDTO {
   username: string
   password: string
 }

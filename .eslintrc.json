@@ -18,7 +18,8 @@
     "@typescript-eslint/brace-style": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/method-signature-style": ["error", "method"]
+    "@typescript-eslint/method-signature-style": ["error", "method"],
+    "@typescript-eslint/naming-convention": "off"
   },
   "ignorePatterns": ["prisma/seeds/*.ts"]
 }
