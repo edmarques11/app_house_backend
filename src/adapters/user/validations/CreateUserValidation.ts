@@ -30,7 +30,7 @@ export default class CreateUserValidation {
           .max(255, "password: máximo de caracteres excedido"),
         profile_image_id: yup
           .string()
-          .max(50, "rule: máximo de caracteres excedido"),
+          .max(50, "profile_image_id: máximo de caracteres excedido"),
       });
 
       const { name, email, password, profile_image_id } = req.body;
