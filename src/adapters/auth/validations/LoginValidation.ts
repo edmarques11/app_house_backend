@@ -1,8 +1,9 @@
 import { type NextFunction, type Request, type Response } from "express";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 import yup from "yup";
+import type ILoginDTO from "~/core/auth/DTO/ILoginDTO";
 
-export default class LoginValidator {
+export default class LoginValidation {
   constructor(private readonly factoryResponse: FactoryJsonResponse) {}
 
   async execute(
@@ -26,7 +27,11 @@ export default class LoginValidator {
 
       const { password, username } = req.body;
 
-      await schema.validate({ password, username }, { abortEarly: false });
+      const data: ILoginDTO = { password, username };
+
+      await schema.validate(data, { abortEarly: false });
+
+      req.body.validatedData = data;
 
       next();
     } catch (err: any) {

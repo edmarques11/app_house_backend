@@ -15,7 +15,7 @@ export default class AuthMiddlweare {
   ) {}
 
   middleware(req: Request, res: Response, next: NextFunction): void {
-    const authHeader = req.cookies.authorization;
+    const authHeader = req.cookies.authorization ?? req.headers.authorization;
 
     if (!authHeader) {
       this.factoryResponse.send(res, 401, this.tokenNotSend.message, {});

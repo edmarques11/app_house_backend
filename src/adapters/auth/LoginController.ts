@@ -1,7 +1,8 @@
 import type { Request, Response } from "express";
 import type IUseCase from "~/adapters/shared/IUseCase";
 import type LoginService from "~/core/auth/service/LoginService";
-import type FactoryJsonResponse from "../shared/helpers/FactoryJsonResponse";
+import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
+import type ILoginDTO from "~/core/auth/DTO/ILoginDTO";
 
 export default class LoginController implements IUseCase<Request, Response> {
   constructor(
@@ -11,9 +12,9 @@ export default class LoginController implements IUseCase<Request, Response> {
 
   async execute(request: Request, response: Response): Promise<void> {
     try {
-      const { username, password } = request.body;
+      const { validatedData } = request.body;
 
-      const token = await this.loginService.execute({ username, password });
+      const token = await this.loginService.execute(validatedData as ILoginDTO);
 
       response
         .status(200)

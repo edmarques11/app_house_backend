@@ -4,5 +4,8 @@
     "adapters": "pipe",
     "external": "tools",
     "user": "admin"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
   }
 }

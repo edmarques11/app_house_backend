@@ -2,6 +2,7 @@ import type CreateUserService from "~/core/user/service/CreateUserService";
 import type IUseCase from "~/adapters/shared/IUseCase";
 import type { Request, Response } from "express";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
+import type ICreateUserDTO from "~/core/user/DTO/ICreateUserDTO";
 
 export default class CreateUserController
   implements IUseCase<Request, Response>
@@ -13,15 +14,15 @@ export default class CreateUserController
 
   async execute(request: Request, response: Response): Promise<void> {
     try {
-      const { name, email, password, rule } = request.body;
+      const { validatedData } = request.body;
 
-      const data = { name, email, password, rule };
-
-      const userCreated = await this.service.execute(data);
+      const userCreated = await this.service.execute(
+        validatedData as ICreateUserDTO
+      );
 
       response.status(201).json({
         code: response.statusCode,
-        message: "Aí preá",
+        message: "ok",
         data: userCreated,
       });
     } catch (err: any) {
