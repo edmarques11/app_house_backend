@@ -11,4 +11,10 @@ export default class AddressRepository implements IAddressRepository {
 
     return address;
   }
+
+  async findById(id: string): Promise<IAddress | null> {
+    const address = await this.prisma.address.findUnique({ where: { id } });
+
+    return address;
+  }
 }

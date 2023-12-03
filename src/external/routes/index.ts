@@ -23,6 +23,11 @@ import SaveAddressValidation from "~/adapters/address/validations/SaveAddressVal
 import SaveAddressService from "~/core/address/service/SaveAddressService";
 import AddressRepository from "../clientDatabase/repository/AddressRepository";
 import SaveAddressController from "~/adapters/address/SaveAddressController";
+import CreateImmobileValidation from "~/adapters/immobile/validations/CreateImmobileValidation";
+import CreateImmobileService from "~/core/immobile/service/CreateImmobileService";
+import ImmobileRepository from "../clientDatabase/repository/ImmobileRepository";
+import AddressNotExists from "~/core/errors/address/AddressNotExists";
+import CreateImmobileController from "~/adapters/immobile/CreateImmobileRepository";
 
 const router: Router = Router();
 
@@ -35,14 +40,12 @@ const tokenNotSend = new TokenNotSend();
 const poorlyFormattedToken = new PoorlyFormattedToken();
 const unauthorizedToken = new UnauthorizedToken();
 const invalidEmailOrPassword = new InvalidEmailOrPassword();
-
 const userAlreadyExists = new UserAlreadyExists();
+const addressNotExists = new AddressNotExists();
 
 // Middleware
 const privateKey: string = process.env.PRIVATE_KEY ?? "";
-
 const authTokenRepository = new AuthTokenRepository(privateKey);
-
 const authMiddleware = new AuthMiddleware(
   authTokenRepository,
   factoryResponse,
@@ -65,26 +68,58 @@ router.all("*", (req: Request, res: Response, next: NextFunction) => {
 
 // Repositories
 const userRepository = new UserRepository(prismaClient);
-const addressRepository = new AddressRepository(prismaClient)
+const addressRepository = new AddressRepository(prismaClient);
+const immobileRepository = new ImmobileRepository(prismaClient);
 
-// Swagger
-router.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerFile)
-);
-
-// User routes
+// Validators
 const createUserValidation = new CreateUserValidation(factoryResponse);
+const loginValidation = new LoginValidation(factoryResponse);
+const saveAddressValidation = new SaveAddressValidation(factoryResponse);
+const createImmobileValidation = new CreateImmobileValidation(factoryResponse);
+
+// Services
 const createUserService = new CreateUserService(
   userRepository,
   securityPassword,
   userAlreadyExists
 );
+const loginService = new LoginService(
+  authTokenRepository,
+  userRepository,
+  securityPassword,
+  invalidEmailOrPassword
+);
+const saveAddressService = new SaveAddressService(addressRepository);
+const createImmobileService = new CreateImmobileService(
+  immobileRepository,
+  addressRepository,
+  addressNotExists
+);
+
+// Controllers
 const createUserController = new CreateUserController(
   createUserService,
   factoryResponse
 );
+const loginController = new LoginController(loginService, factoryResponse);
+const saveAddressController = new SaveAddressController(
+  saveAddressService,
+  factoryResponse
+);
+const createImmobileController = new CreateImmobileController(
+  createImmobileService,
+  factoryResponse
+);
+
+// Swagger
+router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+// Api online
+router.get("/", (req: Request, res: Response) => {
+  res.send("<h1>API Online 😎</h1>")
+});
+
+// User routes
 router.post(
   "/user",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -96,14 +131,6 @@ router.post(
 );
 
 // Auth routes
-const loginValidation = new LoginValidation(factoryResponse);
-const loginService = new LoginService(
-  authTokenRepository,
-  userRepository,
-  securityPassword,
-  invalidEmailOrPassword
-);
-const loginController = new LoginController(loginService, factoryResponse);
 router.post(
   "/login",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -115,14 +142,30 @@ router.post(
 );
 
 // Address routes
-const saveAddressValidation = new SaveAddressValidation(factoryResponse);
-const saveAddressService = new SaveAddressService(addressRepository)
-const saveAddressController = new SaveAddressController(saveAddressService, factoryResponse)
-router.post("/address", async (req: Request, res: Response, next: NextFunction) => {
+router.post(
+  "/address",
+  async (req: Request, res: Response, next: NextFunction) => {
     await saveAddressValidation.execute(req, res, next);
   },
   async (req: Request, res: Response) => {
     await saveAddressController.execute(req, res);
-  })
+  }
+);
+
+// Immobile routes
+router.post(
+  "/immobile",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await createImmobileValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await createImmobileController.execute(req, res);
+  }
+);
+
+// Rota não encontrada
+router.all("*", (req: Request, res: Response) => {
+  factoryResponse.send(res, 404, "Rota não encontrada", {});
+});
 
 export { router };

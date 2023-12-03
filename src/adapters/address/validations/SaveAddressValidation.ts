@@ -1,7 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import yup from "yup";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
-import type ISaveAddressDTO from "~/core/address/DTO/ISaveAddressDTO";
 
 export default class SaveAddressValidation {
   constructor(private readonly factoryResponse: FactoryJsonResponse) {}
@@ -15,28 +14,34 @@ export default class SaveAddressValidation {
       const schema = yup.object({
         zip_code: yup
           .string()
+          .typeError("zip_code: o campo deve ser do tipo string")
           .required("zip_code: o campo não pode ser vazio")
           .matches(/\d{5}-\d{3}/, "zip_code: campo inválido"),
         public_place: yup
           .string()
+          .typeError("public_place: o campo deve ser do tipo string")
           .required("public_place: o campo não pode ser vazio")
           .min(3, "public_place: o campo deve ter no mínimo 3 caracteres")
           .max(100, "public_place: máximo de caracteres excedido"),
         complement: yup
           .string()
+          .typeError("complement: o campo deve ser do tipo string")
           .max(100, "complement: máximo de caracteres excedido"),
         district: yup
           .string()
+          .typeError("district: o campo deve ser do tipo string")
           .required("district: o campo não pode ser vazio")
           .min(3, "district: o campo deve ter no mínimo 3 caracteres")
           .max(100, "district: máximo de caracteres excedido"),
         state: yup
           .string()
+          .typeError("state: o campo deve ser do tipo string")
           .required("state: o campo não pode ser vazio")
           .min(3, "state: o campo deve ter no mínimo 3 caracteres")
           .max(50, "state: máximo de caracteres excedido"),
         uf: yup
           .string()
+          .typeError("uf: o campo deve ser do tipo string")
           .required("uf: o campo não pode ser vazio")
           .length(2, "uf: o campo deve ter 2 caracteres"),
       });
@@ -44,7 +49,7 @@ export default class SaveAddressValidation {
       const { zip_code, public_place, complement, district, state, uf } =
         req.body;
 
-      const data: ISaveAddressDTO = {
+      const data = {
         zip_code,
         public_place,
         complement,
@@ -53,7 +58,7 @@ export default class SaveAddressValidation {
         uf,
       };
 
-      await schema.validate(data, { abortEarly: false });
+      await schema.validate(data, { abortEarly: false, strict: true });
 
       req.body.validatedData = data;
 

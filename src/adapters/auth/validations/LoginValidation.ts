@@ -1,7 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 import yup from "yup";
-import type ILoginDTO from "~/core/auth/DTO/ILoginDTO";
 
 export default class LoginValidation {
   constructor(private readonly factoryResponse: FactoryJsonResponse) {}
@@ -15,11 +14,13 @@ export default class LoginValidation {
       const schema = yup.object({
         username: yup
           .string()
+          .typeError("username: o campo deve ser do tipo string")
           .required("username: o campo não pode ser vazio")
           .email("username: email inválido")
           .max(255, "username: máximo de caracteres excedido"),
         password: yup
           .string()
+          .typeError("password: o campo deve ser do tipo string")
           .required("password: o campo não pode ser vazio")
           .min(6, "password: o campo deve ter no mínimo 6 caracteres")
           .max(255, "password: máximo de caracteres excedido"),
@@ -27,9 +28,9 @@ export default class LoginValidation {
 
       const { password, username } = req.body;
 
-      const data: ILoginDTO = { password, username };
+      const data = { password, username };
 
-      await schema.validate(data, { abortEarly: false });
+      await schema.validate(data, { abortEarly: false, strict: true });
 
       req.body.validatedData = data;
 
