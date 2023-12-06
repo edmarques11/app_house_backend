@@ -28,6 +28,12 @@ import CreateImmobileService from "~/core/immobile/service/CreateImmobileService
 import ImmobileRepository from "../clientDatabase/repository/ImmobileRepository";
 import AddressNotExists from "~/core/errors/address/AddressNotExists";
 import CreateImmobileController from "~/adapters/immobile/CreateImmobileRepository";
+import SaveImageValidation from "~/adapters/image/validations/SaveImageValidation";
+import SaveImageService from "~/core/image/service/SaveImageService";
+import ImageRepository from "~/external/clientDatabase/repository/ImageRepository";
+import SaveImageController from "~/adapters/image/SaveImageController";
+import SaveImageMiddleware from "~/adapters/image/middleware/SaveImageMiddleware";
+import upload from "~/external/multer/multerConfig";
 
 const router: Router = Router();
 
@@ -53,6 +59,7 @@ const authMiddleware = new AuthMiddleware(
   tokenNotSend,
   unauthorizedToken
 );
+const saveImageMiddleware = new SaveImageMiddleware(factoryResponse, upload);
 
 const publicRoutes: string[] = process.env.PUBLIC_ROUTES?.split(",") ?? [];
 router.all("*", (req: Request, res: Response, next: NextFunction) => {
@@ -70,12 +77,14 @@ router.all("*", (req: Request, res: Response, next: NextFunction) => {
 const userRepository = new UserRepository(prismaClient);
 const addressRepository = new AddressRepository(prismaClient);
 const immobileRepository = new ImmobileRepository(prismaClient);
+const imageRepository = new ImageRepository(prismaClient);
 
 // Validators
 const createUserValidation = new CreateUserValidation(factoryResponse);
 const loginValidation = new LoginValidation(factoryResponse);
 const saveAddressValidation = new SaveAddressValidation(factoryResponse);
 const createImmobileValidation = new CreateImmobileValidation(factoryResponse);
+const saveImageValidation = new SaveImageValidation(factoryResponse);
 
 // Services
 const createUserService = new CreateUserService(
@@ -95,6 +104,7 @@ const createImmobileService = new CreateImmobileService(
   addressRepository,
   addressNotExists
 );
+const saveImageService = new SaveImageService(imageRepository);
 
 // Controllers
 const createUserController = new CreateUserController(
@@ -110,13 +120,17 @@ const createImmobileController = new CreateImmobileController(
   createImmobileService,
   factoryResponse
 );
+const saveImageController = new SaveImageController(
+  saveImageService,
+  factoryResponse
+);
 
 // Swagger
 router.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 // Api online
 router.get("/", (req: Request, res: Response) => {
-  res.send("<h1>API Online 😎</h1>")
+  res.send("<h1>API Online 😎</h1>");
 });
 
 // User routes
@@ -160,6 +174,20 @@ router.post(
   },
   async (req: Request, res: Response) => {
     await createImmobileController.execute(req, res);
+  }
+);
+
+// Image routes
+router.post(
+  "/image",
+  (req: Request, res: Response, next: NextFunction) => {
+    saveImageMiddleware.execute(req, res, next);
+  },
+  async (req: Request, res: Response, next: NextFunction) => {
+    await saveImageValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await saveImageController.execute(req, res);
   }
 );
 

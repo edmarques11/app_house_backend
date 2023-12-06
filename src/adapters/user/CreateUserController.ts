@@ -20,11 +20,7 @@ export default class CreateUserController
         validatedData as ICreateUserDTO
       );
 
-      response.status(201).json({
-        code: response.statusCode,
-        message: "ok",
-        data: userCreated,
-      });
+      this.factoryResponse.send(response, 201, "Usuário criado", userCreated);
     } catch (err: any) {
       this.factoryResponse.send(response, 400, err.message, {});
     }
