@@ -21,8 +21,6 @@ export default class SaveImageValidation {
 
       await schema.validate(data, { abortEarly: false, strict: true });
 
-      req.body.dataValidated = data;
-
       next();
     } catch (err: any) {
       this.jsonResponse.send(res, 422, "Campos inválidos", err.errors);

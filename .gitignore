@@ -3,4 +3,7 @@ node_modules
 .env
 # build folder
 /dist
+# local uploads folder
 /uploads
+# firebase config file
+/src/external/firebase/config/firebase_keys.json

@@ -34,8 +34,10 @@ const localStorage = multer.diskStorage({
   filename,
 });
 
+const multerStorage = multer.memoryStorage();
+
 const upload = multer({
-  storage: localStorage,
+  storage: process.env.IS_LOCAL ? localStorage : multerStorage,
   limits: { fileSize: twoMB },
   fileFilter,
 });

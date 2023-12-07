@@ -14,10 +14,10 @@ export default class SaveImageController
 
   async execute(req: Request, res: Response): Promise<void> {
     try {
-      const { dataValidated } = req.body;
+      const { fileHash } = req.body;
 
       const data: ISaveImageDTO = {
-        fileHash: dataValidated.file.filename,
+        fileHash,
       };
 
       const image = await this.saveImageService.execute(data);
