@@ -72,10 +72,10 @@ model Advertisement {
   references    String   @db.VarChar(255)
   phone_contact String   @db.VarChar(100)
   price         Float    @db.Double
-  imobile_id    String   @db.VarChar(50)
+  immobile_id   String   @db.VarChar(50)
   owner_id      String   @db.VarChar(50)
   images        Image[]
-  imobile       Immobile @relation(fields: [imobile_id], references: [id])
+  immobile      Immobile @relation(fields: [immobile_id], references: [id])
   user          User     @relation(fields: [owner_id], references: [id])
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt

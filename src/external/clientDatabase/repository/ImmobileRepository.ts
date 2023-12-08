@@ -11,4 +11,9 @@ export default class ImmobileRepository implements IImobileRepository {
 
       return immobileCreated;
   }
+
+  async findById(id: string): Promise<IImobile | null> {
+      const immobile = await this.prisma.immobile.findUnique({ where: { id } });
+      return immobile
+  }
 }

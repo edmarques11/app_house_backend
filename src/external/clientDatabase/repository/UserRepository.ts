@@ -14,4 +14,9 @@ export default class UserRepository implements IUserRepository {
     const user = await this.prisma.user.findFirst({ where: { email } });
     return user;
   }
+
+  async findById(id: string): Promise<IUser | null> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    return user;
+  }
 }

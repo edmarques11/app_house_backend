@@ -34,6 +34,13 @@ import ImageRepository from "~/external/clientDatabase/repository/ImageRepositor
 import SaveImageController from "~/adapters/image/SaveImageController";
 import SaveImageMiddleware from "~/adapters/image/middleware/SaveImageMiddleware";
 import upload from "~/external/multer/multerConfig";
+import AdvertisementRepository from "../clientDatabase/repository/AdvertisementRepository";
+import SaveAdvertisementValidation from "~/adapters/advertisement/validations/SaveAdvertisementValidation";
+import SaveAdvertisementService from "~/core/advertisement/service/SaveAdvertisementService";
+import UserNotExists from "~/core/errors/user/UserNotExists";
+import ImmobileNotExists from "~/core/errors/immobile/ImmobileNotExists";
+import SomeImageNotExists from "~/core/errors/image/SomeImageNotExists";
+import SaveAdvertisementController from "~/adapters/advertisement/SaveAdvertisementController";
 
 const router: Router = Router();
 
@@ -48,6 +55,9 @@ const unauthorizedToken = new UnauthorizedToken();
 const invalidEmailOrPassword = new InvalidEmailOrPassword();
 const userAlreadyExists = new UserAlreadyExists();
 const addressNotExists = new AddressNotExists();
+const userNotExists = new UserNotExists();
+const immobileNotExists = new ImmobileNotExists();
+const someImageNotExists = new SomeImageNotExists();
 
 // Middleware
 const privateKey: string = process.env.PRIVATE_KEY ?? "";
@@ -78,6 +88,7 @@ const userRepository = new UserRepository(prismaClient);
 const addressRepository = new AddressRepository(prismaClient);
 const immobileRepository = new ImmobileRepository(prismaClient);
 const imageRepository = new ImageRepository(prismaClient);
+const advertisementRepository = new AdvertisementRepository(prismaClient);
 
 // Validators
 const createUserValidation = new CreateUserValidation(factoryResponse);
@@ -85,6 +96,9 @@ const loginValidation = new LoginValidation(factoryResponse);
 const saveAddressValidation = new SaveAddressValidation(factoryResponse);
 const createImmobileValidation = new CreateImmobileValidation(factoryResponse);
 const saveImageValidation = new SaveImageValidation(factoryResponse);
+const saveAdvertisementValidation = new SaveAdvertisementValidation(
+  factoryResponse
+);
 
 // Services
 const createUserService = new CreateUserService(
@@ -105,6 +119,15 @@ const createImmobileService = new CreateImmobileService(
   addressNotExists
 );
 const saveImageService = new SaveImageService(imageRepository);
+const saveAdvertisementService = new SaveAdvertisementService(
+  advertisementRepository,
+  userRepository,
+  immobileRepository,
+  imageRepository,
+  userNotExists,
+  immobileNotExists,
+  someImageNotExists
+);
 
 // Controllers
 const createUserController = new CreateUserController(
@@ -122,6 +145,10 @@ const createImmobileController = new CreateImmobileController(
 );
 const saveImageController = new SaveImageController(
   saveImageService,
+  factoryResponse
+);
+const saveAdvertisementController = new SaveAdvertisementController(
+  saveAdvertisementService,
   factoryResponse
 );
 
@@ -188,6 +215,17 @@ router.post(
   },
   async (req: Request, res: Response) => {
     await saveImageController.execute(req, res);
+  }
+);
+
+// Advertisement routes
+router.post(
+  "/advertisement",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await saveAdvertisementValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await saveAdvertisementController.execute(req, res);
   }
 );
 

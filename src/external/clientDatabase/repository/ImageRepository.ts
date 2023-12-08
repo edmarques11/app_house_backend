@@ -19,4 +19,10 @@ export default class ImageRepository implements IImageRepository {
 
     return deleted;
   }
+
+  async findManyByIds(ids: string[]): Promise<IImage[]> {
+    const images = await this.prisma.image.findMany({ where: { id: { in: ids } } });
+
+    return images
+  }
 }
