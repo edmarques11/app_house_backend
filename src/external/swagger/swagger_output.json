@@ -11,6 +11,16 @@
     "http"
   ],
   "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/user": {
       "post": {
         "description": "",
@@ -21,6 +31,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "validatedData": {
+                  "example": "any"
+                },
                 "name": {
                   "example": "any"
                 },
@@ -30,7 +43,7 @@
                 "password": {
                   "example": "any"
                 },
-                "rule": {
+                "profile_image_id": {
                   "example": "any"
                 }
               }
@@ -54,10 +67,163 @@
             "schema": {
               "type": "object",
               "properties": {
+                "validatedData": {
+                  "example": "any"
+                },
                 "password": {
                   "example": "any"
                 },
                 "username": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/address": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "validatedData": {
+                  "example": "any"
+                },
+                "zip_code": {
+                  "example": "any"
+                },
+                "public_place": {
+                  "example": "any"
+                },
+                "complement": {
+                  "example": "any"
+                },
+                "district": {
+                  "example": "any"
+                },
+                "state": {
+                  "example": "any"
+                },
+                "uf": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/immobile": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "validatedData": {
+                  "example": "any"
+                },
+                "type": {
+                  "example": "any"
+                },
+                "address_id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/image": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fileHash": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/advertisement": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "validatedData": {
+                  "example": "any"
+                },
+                "title": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "width": {
+                  "example": "any"
+                },
+                "length": {
+                  "example": "any"
+                },
+                "references": {
+                  "example": "any"
+                },
+                "phone_contact": {
+                  "example": "any"
+                },
+                "price": {
+                  "example": "any"
+                },
+                "immobile_id": {
+                  "example": "any"
+                },
+                "owner_id": {
+                  "example": "any"
+                },
+                "images": {
                   "example": "any"
                 }
               }
