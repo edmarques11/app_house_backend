@@ -3,6 +3,7 @@ export default interface ISaveAddressDTO {
   public_place: string
   complement?: string
   district: string
-  state: string
+  city: string
+  number?: number
   uf: string
 }

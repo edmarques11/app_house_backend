@@ -33,12 +33,19 @@ export default class SaveAddressValidation {
           .required("district: o campo não pode ser vazio")
           .min(3, "district: o campo deve ter no mínimo 3 caracteres")
           .max(100, "district: máximo de caracteres excedido"),
-        state: yup
+        city: yup
           .string()
-          .typeError("state: o campo deve ser do tipo string")
-          .required("state: o campo não pode ser vazio")
-          .min(3, "state: o campo deve ter no mínimo 3 caracteres")
-          .max(50, "state: máximo de caracteres excedido"),
+          .typeError("city: o campo deve ser do tipo string")
+          .required("city: o campo não pode ser vazio")
+          .min(3, "city: o campo deve ter no mínimo 3 caracteres")
+          .max(200, "city: máximo de caracteres excedido"),
+        number: yup
+          .string()
+          .typeError("number: o campo deve ser do tipo string")
+          .matches(/\d+/, "number: o campo deve ser um número")
+          .required("number: o campo não pode ser vazio")
+          .min(3, "number: o campo deve ter no mínimo 3 caracteres")
+          .max(200, "number: máximo de caracteres excedido"),
         uf: yup
           .string()
           .typeError("uf: o campo deve ser do tipo string")
@@ -46,7 +53,7 @@ export default class SaveAddressValidation {
           .length(2, "uf: o campo deve ter 2 caracteres"),
       });
 
-      const { zip_code, public_place, complement, district, state, uf } =
+      const { zip_code, public_place, complement, district, city, number, uf } =
         req.body;
 
       const data = {
@@ -54,7 +61,8 @@ export default class SaveAddressValidation {
         public_place,
         complement,
         district,
-        state,
+        city,
+        number,
         uf,
       };
 

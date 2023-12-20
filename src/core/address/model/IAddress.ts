@@ -4,7 +4,8 @@ export default interface IAddress {
   public_place: string
   complement: string | null
   district: string
-  state: string
+  city: string
+  number: string | null
   uf: string
   created_at: Date
   updated_at: Date

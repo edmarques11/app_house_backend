@@ -30,7 +30,8 @@ model Address {
   public_place String    @db.VarChar(100)
   complement   String?   @db.VarChar(100)
   district     String    @db.VarChar(200)
-  state        String    @db.VarChar(50)
+  city         String    @db.VarChar(200)
+  number       String    @db.VarChar(10)
   uf           String    @db.Char(2)
   immobile     Immobile?
   created_at   DateTime  @default(now())
