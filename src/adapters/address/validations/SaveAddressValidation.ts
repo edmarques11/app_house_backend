@@ -43,9 +43,7 @@ export default class SaveAddressValidation {
           .string()
           .typeError("number: o campo deve ser do tipo string")
           .matches(/\d+/, "number: o campo deve ser um número")
-          .required("number: o campo não pode ser vazio")
-          .min(3, "number: o campo deve ter no mínimo 3 caracteres")
-          .max(200, "number: máximo de caracteres excedido"),
+          .max(10, "number: máximo de caracteres excedido"),
         uf: yup
           .string()
           .typeError("uf: o campo deve ser do tipo string")
