@@ -2,7 +2,9 @@ import type { PrismaClient } from "@prisma/client";
 import type ISaveImageDTO from "~/core/image/DTO/ISaveImageDTO";
 import type IImage from "~/core/image/model/IImage";
 import type IImageRepository from "~/core/image/repository/IImageRepository";
+import admin from "~/external/firebase/admin";
 
+const bucket = admin.storage().bucket();
 export default class ImageRepository implements IImageRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -11,7 +13,14 @@ export default class ImageRepository implements IImageRepository {
       data: { hash: data.fileHash },
     });
 
-    return image;
+    const expirationDate: Date = new Date();
+    expirationDate.setHours(expirationDate.getHours() + 24);
+
+    const [imageUrl] = await bucket
+      .file(data.fileHash)
+      .getSignedUrl({ action: "read", expires: expirationDate });
+
+    return { ...image, publicUrl: imageUrl } satisfies IImage;
   }
 
   async delete(id: string): Promise<IImage> {
@@ -21,8 +30,10 @@ export default class ImageRepository implements IImageRepository {
   }
 
   async findManyByIds(ids: string[]): Promise<IImage[]> {
-    const images = await this.prisma.image.findMany({ where: { id: { in: ids } } });
+    const images = await this.prisma.image.findMany({
+      where: { id: { in: ids } },
+    });
 
-    return images
+    return images;
   }
 }
