@@ -10,18 +10,22 @@ const saveInBucket = (file: Express.Multer.File): any => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const newFileName = `${file.fieldname}-${uniqueSuffix}.${fileExtension}`;
 
-    const blob = bucket.file(newFileName);
-    const blobStream = blob.createWriteStream();
+    const fileStream =
+      bucket
+      .file(newFileName)
+      .createWriteStream({
+        metadata: { contentType: file.mimetype },
+      });
 
-    blobStream.on("error", async (err) => {
+    fileStream.on("error", (err) => {
       reject(err);
     });
 
-    blobStream.on("finish", async () => {
+    fileStream.on("finish", () => {
       resolve(newFileName);
     });
 
-    blobStream.end(file.buffer);
+    fileStream.end(file.buffer);
   });
 };
 
