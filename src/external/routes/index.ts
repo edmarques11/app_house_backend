@@ -41,6 +41,9 @@ import UserNotExists from "~/core/errors/user/UserNotExists";
 import ImmobileNotExists from "~/core/errors/immobile/ImmobileNotExists";
 import SomeImageNotExists from "~/core/errors/image/SomeImageNotExists";
 import SaveAdvertisementController from "~/adapters/advertisement/SaveAdvertisementController";
+import DeleteImageValidation from "~/adapters/image/validations/DeleteImageValidation";
+import DeleteImageService from "~/core/image/service/DeleteImageService";
+import DeleteImageController from "~/adapters/image/DeleteImageController";
 
 const router: Router = Router();
 
@@ -96,6 +99,7 @@ const loginValidation = new LoginValidation(factoryResponse);
 const saveAddressValidation = new SaveAddressValidation(factoryResponse);
 const createImmobileValidation = new CreateImmobileValidation(factoryResponse);
 const saveImageValidation = new SaveImageValidation(factoryResponse);
+const deleteImageValidation = new DeleteImageValidation(factoryResponse);
 const saveAdvertisementValidation = new SaveAdvertisementValidation(
   factoryResponse
 );
@@ -119,6 +123,7 @@ const createImmobileService = new CreateImmobileService(
   addressNotExists
 );
 const saveImageService = new SaveImageService(imageRepository);
+const deleteImageService = new DeleteImageService(imageRepository);
 const saveAdvertisementService = new SaveAdvertisementService(
   advertisementRepository,
   userRepository,
@@ -145,6 +150,10 @@ const createImmobileController = new CreateImmobileController(
 );
 const saveImageController = new SaveImageController(
   saveImageService,
+  factoryResponse
+);
+const deleteImageController = new DeleteImageController(
+  deleteImageService,
   factoryResponse
 );
 const saveAdvertisementController = new SaveAdvertisementController(
@@ -215,6 +224,15 @@ router.post(
   },
   async (req: Request, res: Response) => {
     await saveImageController.execute(req, res);
+  }
+);
+router.delete(
+  "/image/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await deleteImageValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await deleteImageController.execute(req, res);
   }
 );
 

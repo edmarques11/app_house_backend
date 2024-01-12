@@ -16,9 +16,14 @@ export default class SaveAdvertisementController
     try {
       const { validatedData } = req.body;
 
-      await this.saveAdvertisementService.execute(
-        validatedData as ISaveAdvertisementDTO
-      );
+      interface CustomRequest extends Request { userId: string }
+
+      const data: ISaveAdvertisementDTO = {
+        ...validatedData,
+        owner_id: (req as CustomRequest).userId,
+      };
+
+      await this.saveAdvertisementService.execute(data);
 
       this.jsonResponse.send(res, 204, "Anúncio criado", {});
     } catch (err: any) {

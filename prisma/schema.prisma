@@ -68,8 +68,8 @@ model Advertisement {
   active        Int      @db.Int
   title         String   @db.VarChar(100)
   description   String   @db.VarChar(5000)
-  width         String   @db.VarChar(10)
-  length        String   @db.VarChar(10)
+  width         Float    @db.Double
+  length        Float    @db.Double
   references    String   @db.VarChar(255)
   phone_contact String   @db.VarChar(100)
   price         Float    @db.Double

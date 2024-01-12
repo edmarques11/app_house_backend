@@ -23,23 +23,13 @@ export default class SaveAdvertisementValidation {
           .required("description: o campo é obrigatório")
           .max(5000, "description: o campo deve ter no máximo 5000 caracteres"),
         width: yup
-          .string()
-          .typeError("width: o campo deve ser uma string")
-          .required("width: o campo é obrigatório")
-          .matches(
-            /^\d+$/,
-            "width: o campo deve conter apenas caracteres numericos"
-          )
-          .max(10, "width: o campo deve ter no máximo 10 caracteres"),
+          .number()
+          .typeError("width: o campo deve ser numérico")
+          .required("width: o campo é obrigatório"),
         length: yup
-          .string()
-          .typeError("length: o campo deve ser uma string")
-          .required("length: o campo é obrigatório")
-          .matches(
-            /^\d+$/,
-            "length: o campo deve conter apenas caracteres numericos"
-          )
-          .max(10, "length: o campo deve ter no máximo 10 caracteres"),
+          .number()
+          .typeError("length: o campo deve ser numérico")
+          .required("length: o campo é obrigatório"),
         references: yup
           .string()
           .typeError("references: o campo deve ser uma string")
@@ -54,11 +44,6 @@ export default class SaveAdvertisementValidation {
           .number()
           .typeError("price: o campo deve ser um número")
           .required("price: o campo é obrigatório"),
-        owner_id: yup
-          .string()
-          .typeError("owner_id: o campo deve ser uma string")
-          .required("owner_id: o campo é obrigatório")
-          .max(50, "owner_id: o campo deve ter no máximo 50 caracteres"),
         immobile_id: yup
           .string()
           .typeError("immobile_id: o campo deve ser uma string")
