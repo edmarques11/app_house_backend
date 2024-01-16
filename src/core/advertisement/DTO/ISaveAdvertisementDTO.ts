@@ -1,8 +1,8 @@
 export default interface ISaveAdvertisementDTO {
   title: string
   description: string
-  width: string
-  length: string
+  width: number
+  length: number
   references: string
   phone_contact: string
   price: number

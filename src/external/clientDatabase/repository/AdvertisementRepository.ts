@@ -1,5 +1,7 @@
 import { type PrismaClient } from "@prisma/client";
+import type IListAdvertisementDTO from "~/core/advertisement/DTO/IListAdvertisementDTO";
 import type ISaveAdvertisementDTO from "~/core/advertisement/DTO/ISaveAdvertisementDTO";
+import type IListAdvertisement from "~/core/advertisement/interfaces/IListAdvertisement";
 import type IAdvertisementRepository from "~/core/advertisement/repository/IAdvertisementRepository";
 
 export default class AdvertisementRepository
@@ -19,5 +21,22 @@ export default class AdvertisementRepository
         },
       },
     });
+  }
+
+  async list(data: IListAdvertisementDTO): Promise<IListAdvertisement> {
+    const total = await this.prisma.advertisement.count();
+    const skip = (data.page - 1) * data.itemsPerPage;
+
+    const advertisements = await this.prisma.advertisement.findMany({
+      skip,
+      take: data.itemsPerPage,
+      where: { owner_id: data.ownerId },
+      include: {
+        images: true,
+        immobile: true,
+      },
+    });
+
+    return { advertisements, total } satisfies IListAdvertisement;
   }
 }

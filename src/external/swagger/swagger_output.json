@@ -112,7 +112,10 @@
                 "district": {
                   "example": "any"
                 },
-                "state": {
+                "city": {
+                  "example": "any"
+                },
+                "number": {
                   "example": "any"
                 },
                 "uf": {
@@ -183,6 +186,36 @@
         }
       }
     },
+    "/image/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "validatedData": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/advertisement": {
       "post": {
         "description": "",
@@ -228,6 +261,26 @@
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "itemsPerPage",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {

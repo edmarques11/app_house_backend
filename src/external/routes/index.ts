@@ -44,12 +44,19 @@ import SaveAdvertisementController from "~/adapters/advertisement/SaveAdvertisem
 import DeleteImageValidation from "~/adapters/image/validations/DeleteImageValidation";
 import DeleteImageService from "~/core/image/service/DeleteImageService";
 import DeleteImageController from "~/adapters/image/DeleteImageController";
+import Bucket from "~/external/firebase/Bucket";
+import ListAdvertisementValidation from "~/adapters/advertisement/validations/ListAdvertisementValidation";
+import ListAdvertisementService from "~/core/advertisement/service/ListAdvertisementService";
+import ListAdvertisementController from "~/adapters/advertisement/ListAdvertisementController";
 
 const router: Router = Router();
 
 // External helpers
 const securityPassword = new SecurityPassword();
 const factoryResponse = new FactoryJsonResponse();
+
+// External libs
+const firebaseBucket = new Bucket();
 
 // Errors
 const tokenNotSend = new TokenNotSend();
@@ -103,6 +110,9 @@ const deleteImageValidation = new DeleteImageValidation(factoryResponse);
 const saveAdvertisementValidation = new SaveAdvertisementValidation(
   factoryResponse
 );
+const listAdvertisementValidation = new ListAdvertisementValidation(
+  factoryResponse
+);
 
 // Services
 const createUserService = new CreateUserService(
@@ -122,7 +132,7 @@ const createImmobileService = new CreateImmobileService(
   addressRepository,
   addressNotExists
 );
-const saveImageService = new SaveImageService(imageRepository);
+const saveImageService = new SaveImageService(imageRepository, firebaseBucket);
 const deleteImageService = new DeleteImageService(imageRepository);
 const saveAdvertisementService = new SaveAdvertisementService(
   advertisementRepository,
@@ -132,6 +142,10 @@ const saveAdvertisementService = new SaveAdvertisementService(
   userNotExists,
   immobileNotExists,
   someImageNotExists
+);
+const listAdvertisementService = new ListAdvertisementService(
+  advertisementRepository,
+  firebaseBucket
 );
 
 // Controllers
@@ -158,6 +172,10 @@ const deleteImageController = new DeleteImageController(
 );
 const saveAdvertisementController = new SaveAdvertisementController(
   saveAdvertisementService,
+  factoryResponse
+);
+const listAdvertisementController = new ListAdvertisementController(
+  listAdvertisementService,
   factoryResponse
 );
 
@@ -244,6 +262,15 @@ router.post(
   },
   async (req: Request, res: Response) => {
     await saveAdvertisementController.execute(req, res);
+  }
+);
+router.get(
+  "/advertisement",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await listAdvertisementValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await listAdvertisementController.execute(req, res);
   }
 );
 
