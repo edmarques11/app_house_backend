@@ -1,6 +1,8 @@
 import { type PrismaClient } from "@prisma/client";
 import type IListAdvertisementDTO from "~/core/advertisement/DTO/IListAdvertisementDTO";
 import type ISaveAdvertisementDTO from "~/core/advertisement/DTO/ISaveAdvertisementDTO";
+import type IUpdateAdvertisementDTO from "~/core/advertisement/DTO/IUpdateAdvertisementDTOM";
+import type IAdvertisementData from "~/core/advertisement/interfaces/IAdvertsementData";
 import type IListAdvertisement from "~/core/advertisement/interfaces/IListAdvertisement";
 import type IAdvertisementRepository from "~/core/advertisement/repository/IAdvertisementRepository";
 
@@ -38,5 +40,31 @@ export default class AdvertisementRepository
     });
 
     return { advertisements, total } satisfies IListAdvertisement;
+  }
+
+  async getById(id: string): Promise<IAdvertisementData | null> {
+    const advertisement = await this.prisma.advertisement.findUnique({
+      where: { id },
+      include: {
+        images: true,
+        immobile: true,
+      },
+    });
+
+    return advertisement;
+  }
+
+  async update(data: IUpdateAdvertisementDTO): Promise<void> {
+    const { id, images, ...dataAdvertisement } = data;
+
+    await this.prisma.advertisement.update({
+      where: { id },
+      data: {
+        ...dataAdvertisement,
+        images: {
+          connect: images.map((image: string) => ({ id: image })),
+        },
+      },
+    });
   }
 }
