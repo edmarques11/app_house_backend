@@ -9,10 +9,12 @@ export default class ListAdvertisementService
 {
   constructor(
     private readonly advertisementRepository: IAdvertisementRepository,
-    private readonly bucket: IBucket
+    private readonly bucket: IBucket,
   ) {}
 
   async execute(data: IListAdvertisementDTO): Promise<IListAdvertisement> {
+    !data.ownerId && delete data.ownerId;
+
     const advertisements = await this.advertisementRepository.list(data);
 
     await Promise.all(

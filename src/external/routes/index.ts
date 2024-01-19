@@ -48,6 +48,9 @@ import Bucket from "~/external/firebase/Bucket";
 import ListAdvertisementValidation from "~/adapters/advertisement/validations/ListAdvertisementValidation";
 import ListAdvertisementService from "~/core/advertisement/service/ListAdvertisementService";
 import ListAdvertisementController from "~/adapters/advertisement/ListAdvertisementController";
+import GetAdvertisementValidation from "~/adapters/advertisement/validations/GetAdvertisementValidadtion";
+import GetAdvertisementService from "~/core/advertisement/service/GetAdvertisementService";
+import GetAdvertisementController from "~/adapters/advertisement/GetAdvertisementController";
 
 const router: Router = Router();
 
@@ -113,6 +116,9 @@ const saveAdvertisementValidation = new SaveAdvertisementValidation(
 const listAdvertisementValidation = new ListAdvertisementValidation(
   factoryResponse
 );
+const getAdvertisementValidation = new GetAdvertisementValidation(
+  factoryResponse
+);
 
 // Services
 const createUserService = new CreateUserService(
@@ -147,6 +153,10 @@ const listAdvertisementService = new ListAdvertisementService(
   advertisementRepository,
   firebaseBucket
 );
+const getAdvertisementService = new GetAdvertisementService(
+  advertisementRepository,
+  firebaseBucket
+);
 
 // Controllers
 const createUserController = new CreateUserController(
@@ -176,6 +186,10 @@ const saveAdvertisementController = new SaveAdvertisementController(
 );
 const listAdvertisementController = new ListAdvertisementController(
   listAdvertisementService,
+  factoryResponse
+);
+const getAdvertisementController = new GetAdvertisementController(
+  getAdvertisementService,
   factoryResponse
 );
 
@@ -271,6 +285,15 @@ router.get(
   },
   async (req: Request, res: Response) => {
     await listAdvertisementController.execute(req, res);
+  }
+);
+router.get(
+  "/advertisement/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await getAdvertisementValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await getAdvertisementController.execute(req, res);
   }
 );
 
