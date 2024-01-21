@@ -54,6 +54,8 @@ import GetAdvertisementController from "~/adapters/advertisement/GetAdvertisemen
 import DeleteAdvertisementValidation from "~/adapters/advertisement/validations/DeleteAdvertisementValidadtion";
 import DeleteAdvertisementService from "~/core/advertisement/service/DeleteAdvertisementService";
 import DeleteAdvertisementController from "~/adapters/advertisement/DeleteAdvertisementController";
+import ValidateTokenService from "~/core/auth/service/ValidateTokenService";
+import GetTokenInfo from "~/adapters/auth/herlper/GetTokenInfo";
 
 const router: Router = Router();
 
@@ -86,18 +88,6 @@ const authMiddleware = new AuthMiddleware(
   unauthorizedToken
 );
 const saveImageMiddleware = new SaveImageMiddleware(factoryResponse, upload);
-
-const publicRoutes: string[] = process.env.PUBLIC_ROUTES?.split(",") ?? [];
-router.all("*", (req: Request, res: Response, next: NextFunction) => {
-  if (
-    (/^\/api-docs\/*/.test(req.path) && !process.env.production) ||
-    publicRoutes.includes(req.path)
-  ) {
-    next();
-  } else {
-    authMiddleware.middleware(req, res, next);
-  }
-});
 
 // Repositories
 const userRepository = new UserRepository(prismaClient);
@@ -138,6 +128,7 @@ const loginService = new LoginService(
   securityPassword,
   invalidEmailOrPassword
 );
+const validateTokenService = new ValidateTokenService(authTokenRepository)
 const saveAddressService = new SaveAddressService(addressRepository);
 const createImmobileService = new CreateImmobileService(
   immobileRepository,
@@ -167,6 +158,9 @@ const deleteAdvertisementService = new DeleteAdvertisementService(
   advertisementRepository
 );
 
+// Helpers Controllers
+const getTokenInfo = new GetTokenInfo(validateTokenService)
+
 // Controllers
 const createUserController = new CreateUserController(
   createUserService,
@@ -195,7 +189,8 @@ const saveAdvertisementController = new SaveAdvertisementController(
 );
 const listAdvertisementController = new ListAdvertisementController(
   listAdvertisementService,
-  factoryResponse
+  factoryResponse,
+  getTokenInfo
 );
 const getAdvertisementController = new GetAdvertisementController(
   getAdvertisementService,
@@ -239,6 +234,9 @@ router.post(
 // Address routes
 router.post(
   "/address",
+  (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware.middleware(req, res, next);
+  },
   async (req: Request, res: Response, next: NextFunction) => {
     await saveAddressValidation.execute(req, res, next);
   },
@@ -250,6 +248,9 @@ router.post(
 // Immobile routes
 router.post(
   "/immobile",
+  (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware.middleware(req, res, next);
+  },
   async (req: Request, res: Response, next: NextFunction) => {
     await createImmobileValidation.execute(req, res, next);
   },
@@ -262,6 +263,9 @@ router.post(
 router.post(
   "/image",
   (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware.middleware(req, res, next);
+  },
+  (req: Request, res: Response, next: NextFunction) => {
     saveImageMiddleware.execute(req, res, next);
   },
   async (req: Request, res: Response, next: NextFunction) => {
@@ -273,6 +277,9 @@ router.post(
 );
 router.delete(
   "/image/:id",
+  (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware.middleware(req, res, next);
+  },
   async (req: Request, res: Response, next: NextFunction) => {
     await deleteImageValidation.execute(req, res, next);
   },
@@ -284,6 +291,9 @@ router.delete(
 // Advertisement routes
 router.post(
   "/advertisement",
+  (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware.middleware(req, res, next);
+  },
   async (req: Request, res: Response, next: NextFunction) => {
     await saveAdvertisementValidation.execute(req, res, next);
   },
@@ -311,6 +321,9 @@ router.get(
 );
 router.delete(
   "/advertisement/:id",
+  (req: Request, res: Response, next: NextFunction) => {
+    authMiddleware.middleware(req, res, next);
+  },
   async (req: Request, res: Response, next: NextFunction) => {
     await deleteAdvertisementValidation.execute(req, res, next);
   },

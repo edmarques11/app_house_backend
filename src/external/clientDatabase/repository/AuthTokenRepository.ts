@@ -1,5 +1,6 @@
 import type IAuthTokenRepository from "~/core/auth/Repository/IAuthTokenRepository";
 import jwt from "jsonwebtoken";
+import type ITokenDecoded from "~/core/auth/interfaces/ITokenDecoded";
 
 export default class AuthTokenRepository implements IAuthTokenRepository {
   constructor(private readonly privateKey: string) {}
@@ -12,10 +13,10 @@ export default class AuthTokenRepository implements IAuthTokenRepository {
     return token;
   }
 
-  verifyValidToken(token: string): object {
+  verifyValidToken(token: string): ITokenDecoded {
     try {
       const decoded = jwt.verify(token, this.privateKey);
-      return decoded as object;
+      return decoded as ITokenDecoded;
     } catch {
       throw new Error("Token inválido");
     }

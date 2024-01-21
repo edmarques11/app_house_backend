@@ -46,8 +46,7 @@ export default class AuthMiddlweare {
     }
 
     try {
-      const decoded = this.authRepository.verifyValidToken(token);
-      Object.assign(req, { userId: decoded?.user_id });
+      this.authRepository.verifyValidToken(token);
       next();
     } catch (err) {
       this.factoryResponse.send(res, 401, this.unauthorizedToken.message, {});

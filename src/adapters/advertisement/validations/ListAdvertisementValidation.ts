@@ -20,13 +20,17 @@ export default class ListAdvertisementValidation {
           .string()
           .matches(/^[0-9]+$/, "itemsPerPage: o campo deve ser um número")
           .required("itemsPerPage: o campo é obrigatório"),
+        toOwner: yup
+          .string()
+          .matches(/0|1/, "toOwner: o campo deve ser um '0' ou '1'")
       });
 
-      const { page, itemsPerPage } = req.query;
+      const { page, itemsPerPage, toOwner } = req.query;
 
       const data = {
         page,
         itemsPerPage,
+        toOwner
       };
 
       await schema.validate(data, { abortEarly: false, strict: true });

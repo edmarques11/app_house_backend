@@ -30,10 +30,13 @@ export default class AdvertisementRepository
     const total = await this.prisma.advertisement.count();
     const skip = (data.page - 1) * data.itemsPerPage;
 
+    const whereQuery: Record<string, any> = {};
+    if (data.toOwner === "1") Object.assign(whereQuery, { owner_id: data.ownerId });
+
     const advertisements = await this.prisma.advertisement.findMany({
       skip,
       take: data.itemsPerPage,
-      where: { owner_id: data.ownerId },
+      where: whereQuery,
       include: {
         images: true,
         immobile: true,

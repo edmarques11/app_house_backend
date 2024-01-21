@@ -3,24 +3,26 @@ import type IUseCase from "~/adapters/shared/IUseCase";
 import type SaveAdvertisementService from "~/core/advertisement/service/SaveAdvertisementService";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 import type ISaveAdvertisementDTO from "~/core/advertisement/DTO/ISaveAdvertisementDTO";
+import type GetTokenInfo from "../auth/herlper/GetTokenInfo";
 
 export default class SaveAdvertisementController
   implements IUseCase<Request, Response>
 {
   constructor(
     private readonly saveAdvertisementService: SaveAdvertisementService,
-    private readonly jsonResponse: FactoryJsonResponse
+    private readonly jsonResponse: FactoryJsonResponse,
+    private readonly getTokenInfo: GetTokenInfo
   ) {}
 
   async execute(req: Request, res: Response): Promise<void> {
     try {
       const { validatedData } = req.body;
 
-      interface CustomRequest extends Request { userId: string }
+      const userId = await this.getTokenInfo.getUserId(req);
 
       const data: ISaveAdvertisementDTO = {
         ...validatedData,
-        owner_id: (req as CustomRequest).userId,
+        owner_id: userId,
       };
 
       await this.saveAdvertisementService.execute(data);
