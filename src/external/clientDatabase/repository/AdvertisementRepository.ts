@@ -1,4 +1,5 @@
 import { type PrismaClient } from "@prisma/client";
+import type IDeleteAdvertisementDTO from "~/core/advertisement/DTO/IDeleteAdvertisementDTO";
 import type IListAdvertisementDTO from "~/core/advertisement/DTO/IListAdvertisementDTO";
 import type ISaveAdvertisementDTO from "~/core/advertisement/DTO/ISaveAdvertisementDTO";
 import type IUpdateAdvertisementDTO from "~/core/advertisement/DTO/IUpdateAdvertisementDTOM";
@@ -66,5 +67,9 @@ export default class AdvertisementRepository
         },
       },
     });
+  }
+
+  async delete(data: IDeleteAdvertisementDTO): Promise<void> {
+    await this.prisma.advertisement.delete({ where: { id: data.id } });
   }
 }

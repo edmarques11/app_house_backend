@@ -51,6 +51,9 @@ import ListAdvertisementController from "~/adapters/advertisement/ListAdvertisem
 import GetAdvertisementValidation from "~/adapters/advertisement/validations/GetAdvertisementValidadtion";
 import GetAdvertisementService from "~/core/advertisement/service/GetAdvertisementService";
 import GetAdvertisementController from "~/adapters/advertisement/GetAdvertisementController";
+import DeleteAdvertisementValidation from "~/adapters/advertisement/validations/DeleteAdvertisementValidadtion";
+import DeleteAdvertisementService from "~/core/advertisement/service/DeleteAdvertisementService";
+import DeleteAdvertisementController from "~/adapters/advertisement/DeleteAdvertisementController";
 
 const router: Router = Router();
 
@@ -119,6 +122,9 @@ const listAdvertisementValidation = new ListAdvertisementValidation(
 const getAdvertisementValidation = new GetAdvertisementValidation(
   factoryResponse
 );
+const deleteAdvertisementValidation = new DeleteAdvertisementValidation(
+  factoryResponse
+);
 
 // Services
 const createUserService = new CreateUserService(
@@ -157,6 +163,9 @@ const getAdvertisementService = new GetAdvertisementService(
   advertisementRepository,
   firebaseBucket
 );
+const deleteAdvertisementService = new DeleteAdvertisementService(
+  advertisementRepository
+);
 
 // Controllers
 const createUserController = new CreateUserController(
@@ -190,6 +199,10 @@ const listAdvertisementController = new ListAdvertisementController(
 );
 const getAdvertisementController = new GetAdvertisementController(
   getAdvertisementService,
+  factoryResponse
+);
+const deleteAdvertisementController = new DeleteAdvertisementController(
+  deleteAdvertisementService,
   factoryResponse
 );
 
@@ -294,6 +307,15 @@ router.get(
   },
   async (req: Request, res: Response) => {
     await getAdvertisementController.execute(req, res);
+  }
+);
+router.delete(
+  "/advertisement/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    await deleteAdvertisementValidation.execute(req, res, next);
+  },
+  async (req: Request, res: Response) => {
+    await deleteAdvertisementController.execute(req, res);
   }
 );
 
