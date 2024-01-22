@@ -1,5 +1,11 @@
 import admin from 'firebase-admin'
-import firebaseKeys from '~/external/firebase/config/firebase_keys.json'
+
+let firebaseKeys = {};
+try {
+  firebaseKeys = require('~/external/firebase/config/firebase_keys.json')
+} catch {
+  firebaseKeys = JSON.parse(process.env.FIREBASE_KEYS as string)
+}
 
 admin.initializeApp({
   credential: admin.credential.cert(firebaseKeys as any),
