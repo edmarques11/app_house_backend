@@ -3,7 +3,8 @@
   "type": "module",
   "scripts": {
     "start": "bun src/external/server.ts",
-    "start:migrate:prod": "prisma generate && prisma migrate deploy && bun run start",
+    "build": "prisma generate",
+    "start:migrate:prod": "prisma migrate deploy && bun run start",
     "dev": "bun run --watch src/external/server.ts",
     "dev:debugger": "bun run --inspect src/external/server.ts",
     "swagger-autogen": "bun ./src/external/swagger/swagger.ts"
