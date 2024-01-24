@@ -185,7 +185,8 @@ const deleteImageController = new DeleteImageController(
 );
 const saveAdvertisementController = new SaveAdvertisementController(
   saveAdvertisementService,
-  factoryResponse
+  factoryResponse,
+  getTokenInfo
 );
 const listAdvertisementController = new ListAdvertisementController(
   listAdvertisementService,

@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
-import yup from "yup";
+import * as yup from "yup";
 
 export default class LoginValidation {
   constructor(private readonly factoryResponse: FactoryJsonResponse) {}
@@ -27,6 +27,7 @@ export default class LoginValidation {
       });
 
       const { password, username } = req.body;
+
 
       const data = { password, username };
 

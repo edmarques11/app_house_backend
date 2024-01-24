@@ -1,5 +1,5 @@
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
-import yup from "yup";
+import * as yup from "yup";
 import type { Request, Response, NextFunction } from "express";
 
 export default class SaveImageValidation {

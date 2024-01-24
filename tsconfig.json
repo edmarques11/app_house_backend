@@ -1,31 +1,18 @@
 {
   "compilerOptions": {
-    // bun configs
-    "lib": ["ESNext"],
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "bundler",
-    "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "composite": true,
-    "strict": true,
-    "downlevelIteration": true,
-    "skipLibCheck": true,
-    "jsx": "react-jsx",
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "types": [
-      "bun-types" // add Bun global
-    ],
-    // ----------------------------------------
+    "target": "es2016",
+    "module": "commonjs",
     "rootDir": "./src",
+    "outDir": "./dist",
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
   },
-  // "exclude": ["prisma/seeds/*.ts"],
-  "include": ["src/**/*.ts", "src/**/*.json"]
+  "exclude": ["prisma/seeds/**.*"]
 }

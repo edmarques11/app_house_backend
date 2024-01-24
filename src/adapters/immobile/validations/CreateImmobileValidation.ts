@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import yup from "yup";
+import * as yup from "yup";
 import type FactoryJsonResponse from "~/adapters/shared/helpers/FactoryJsonResponse";
 
 export default class CreateImmobileValidation {
