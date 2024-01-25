@@ -22,15 +22,17 @@ export default class ListAdvertisementValidation {
           .required("itemsPerPage: o campo é obrigatório"),
         toOwner: yup
           .string()
-          .matches(/0|1/, "toOwner: o campo deve ser um '0' ou '1'")
+          .matches(/0|1/, "toOwner: o campo deve ser um '0' ou '1'"),
+        location: yup.string().nullable(),
       });
 
-      const { page, itemsPerPage, toOwner } = req.query;
+      const { page, itemsPerPage, toOwner, location } = req.query;
 
       const data = {
         page,
         itemsPerPage,
-        toOwner
+        toOwner,
+        location,
       };
 
       await schema.validate(data, { abortEarly: false, strict: true });

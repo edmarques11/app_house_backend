@@ -27,13 +27,29 @@ export default class AdvertisementRepository
   }
 
   async list(data: IListAdvertisementDTO): Promise<IListAdvertisement> {
-    const total = await this.prisma.advertisement.count();
     const skip = (data.page - 1) * data.itemsPerPage;
 
     const whereQuery: Record<string, any> = {};
     if (data.toOwner === "1")
       Object.assign(whereQuery, { owner_id: data.ownerId });
 
+    if (data.location) {
+      const fields = ["zip_code", "public_place", "district", "city", "uf"].map(
+        (field) => ({
+          [field]: { contains: data.location, mode: "insensitive" },
+        })
+      );
+
+      Object.assign(whereQuery, {
+        immobile: {
+          address: {
+            OR: fields,
+          },
+        },
+      });
+    }
+
+    const total = await this.prisma.advertisement.count({ where: whereQuery });
     const advertisements = await this.prisma.advertisement.findMany({
       skip,
       take: data.itemsPerPage,
