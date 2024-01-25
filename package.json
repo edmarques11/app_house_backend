@@ -7,7 +7,8 @@
     "start": "node dist/external/server.js",
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/external/server.ts",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
-    "swagger-autogen": "bun ./src/external/swagger/swagger.ts"
+    "swagger-autogen": "bun ./src/external/swagger/swagger.ts",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",

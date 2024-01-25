@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -65,14 +65,14 @@ model Image {
 
 model Advertisement {
   id            String   @id @default(uuid())
-  active        Int      @db.Int
+  active        Int      @db.Integer
   title         String   @db.VarChar(100)
   description   String   @db.VarChar(5000)
-  width         Float    @db.Double
-  length        Float    @db.Double
+  width         Float    @db.DoublePrecision
+  length        Float    @db.DoublePrecision
   references    String   @db.VarChar(255)
   phone_contact String   @db.VarChar(100)
-  price         Float    @db.Double
+  price         Float    @db.DoublePrecision
   immobile_id   String   @db.VarChar(50)
   owner_id      String   @db.VarChar(50)
   images        Image[]
