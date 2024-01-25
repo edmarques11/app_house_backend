@@ -1,6 +1,10 @@
+import IAddress from "~/core/address/model/IAddress"
 import type IImage from "~/core/image/model/IImage"
 import type IImobile from "~/core/immobile/Model/IImmobile"
 
+interface ImmobileWithAddress extends IImobile {
+  address: IAddress
+}
 export default interface IAdvertisementData {
   id: string
   active: number
@@ -15,6 +19,6 @@ export default interface IAdvertisementData {
   owner_id: string
   created_at: Date
   updated_at: Date
-  immobile: IImobile
+  immobile: ImmobileWithAddress
   images: IImage[]
 }

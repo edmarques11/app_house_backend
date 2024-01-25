@@ -31,7 +31,8 @@ export default class AdvertisementRepository
     const skip = (data.page - 1) * data.itemsPerPage;
 
     const whereQuery: Record<string, any> = {};
-    if (data.toOwner === "1") Object.assign(whereQuery, { owner_id: data.ownerId });
+    if (data.toOwner === "1")
+      Object.assign(whereQuery, { owner_id: data.ownerId });
 
     const advertisements = await this.prisma.advertisement.findMany({
       skip,
@@ -39,8 +40,13 @@ export default class AdvertisementRepository
       where: whereQuery,
       include: {
         images: true,
-        immobile: true,
+        immobile: {
+          include: {
+            address: true,
+          },
+        },
       },
+      orderBy: { updated_at: "desc" },
     });
 
     return { advertisements, total } satisfies IListAdvertisement;
@@ -51,7 +57,11 @@ export default class AdvertisementRepository
       where: { id },
       include: {
         images: true,
-        immobile: true,
+        immobile: {
+          include: {
+            address: true,
+          },
+        },
       },
     });
 

@@ -31,7 +31,7 @@ model Address {
   complement   String?   @db.VarChar(100)
   district     String    @db.VarChar(200)
   city         String    @db.VarChar(200)
-  number       String    @db.VarChar(10)
+  number       String?   @db.VarChar(10)
   uf           String    @db.Char(2)
   immobile     Immobile?
   created_at   DateTime  @default(now())

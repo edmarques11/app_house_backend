@@ -25,6 +25,7 @@ export default class SaveAddressValidation {
           .max(100, "public_place: máximo de caracteres excedido"),
         complement: yup
           .string()
+          .nullable()
           .typeError("complement: o campo deve ser do tipo string")
           .max(100, "complement: máximo de caracteres excedido"),
         district: yup
@@ -41,6 +42,7 @@ export default class SaveAddressValidation {
           .max(200, "city: máximo de caracteres excedido"),
         number: yup
           .string()
+          .nullable()
           .typeError("number: o campo deve ser do tipo string")
           .matches(/\d+/, "number: o campo deve ser um número")
           .max(10, "number: máximo de caracteres excedido"),
