@@ -43,7 +43,8 @@ export default class SaveAdvertisementValidation {
         price: yup
           .number()
           .typeError("price: o campo deve ser um número")
-          .required("price: o campo é obrigatório"),
+          .required("price: o campo é obrigatório")
+          .max(1000000, "price: o campo deve ser no máximo 1 milhão"),
         immobile_id: yup
           .string()
           .typeError("immobile_id: o campo deve ser uma string")
