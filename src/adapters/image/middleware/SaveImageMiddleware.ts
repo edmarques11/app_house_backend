@@ -12,7 +12,12 @@ export default class SaveImageMiddleware {
   execute(req: Request, res: Response, next: NextFunction): void {
     this.upload.single("file")(req, res, async (err: any) => {
       if (err instanceof multer.MulterError) {
-        this.jsonResponse.send(res, 500, "Não foi a salvar imagem", {});
+        if (err.code === "LIMIT_FILE_SIZE") {
+          this.jsonResponse.send(res, 400, "O arquivo deve ter no máximo 2MB", {});
+          return;
+        }
+
+        this.jsonResponse.send(res, 500, "Não foi possível salvar a imagem", {});
         return;
       }
 
