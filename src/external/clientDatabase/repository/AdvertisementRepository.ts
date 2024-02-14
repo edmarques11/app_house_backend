@@ -5,6 +5,7 @@ import type ISaveAdvertisementDTO from "~/core/advertisement/DTO/ISaveAdvertisem
 import type IUpdateAdvertisementDTO from "~/core/advertisement/DTO/IUpdateAdvertisementDTOM";
 import type IAdvertisementData from "~/core/advertisement/interfaces/IAdvertsementData";
 import type IListAdvertisement from "~/core/advertisement/interfaces/IListAdvertisement";
+import IAdvertisement from "~/core/advertisement/model/IAdvertisement";
 import type IAdvertisementRepository from "~/core/advertisement/repository/IAdvertisementRepository";
 
 export default class AdvertisementRepository
@@ -98,7 +99,11 @@ export default class AdvertisementRepository
     });
   }
 
-  async delete(data: IDeleteAdvertisementDTO): Promise<void> {
-    await this.prisma.advertisement.delete({ where: { id: data.id } });
+  async delete(data: IDeleteAdvertisementDTO): Promise<IAdvertisement> {
+    const advertisement = await this.prisma.advertisement.delete({
+      where: { id: data.id, owner_id: data.ownerId },
+    });
+
+    return advertisement;
   }
 }

@@ -56,6 +56,8 @@ import DeleteAdvertisementService from "~/core/advertisement/service/DeleteAdver
 import DeleteAdvertisementController from "~/adapters/advertisement/DeleteAdvertisementController";
 import ValidateTokenService from "~/core/auth/service/ValidateTokenService";
 import GetTokenInfo from "~/adapters/auth/herlper/GetTokenInfo";
+import AdvertisementNotExists from "~/core/errors/advertisement/AdvertisementNotExists";
+import NotAllowedOperation from "~/core/errors/access/NotAllowedOperation";
 
 const router: Router = Router();
 
@@ -76,6 +78,8 @@ const addressNotExists = new AddressNotExists();
 const userNotExists = new UserNotExists();
 const immobileNotExists = new ImmobileNotExists();
 const someImageNotExists = new SomeImageNotExists();
+const advertisementNotExists = new AdvertisementNotExists();
+const notAllowedOperation = new NotAllowedOperation();
 
 // Middleware
 const privateKey: string = process.env.PRIVATE_KEY ?? "";
@@ -155,7 +159,9 @@ const getAdvertisementService = new GetAdvertisementService(
   firebaseBucket
 );
 const deleteAdvertisementService = new DeleteAdvertisementService(
-  advertisementRepository
+  advertisementRepository,
+  advertisementNotExists,
+  notAllowedOperation
 );
 
 // Helpers Controllers
@@ -199,7 +205,8 @@ const getAdvertisementController = new GetAdvertisementController(
 );
 const deleteAdvertisementController = new DeleteAdvertisementController(
   deleteAdvertisementService,
-  factoryResponse
+  factoryResponse,
+  getTokenInfo
 );
 
 // Swagger
